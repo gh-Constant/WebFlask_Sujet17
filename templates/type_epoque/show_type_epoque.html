@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>afficher les types d'epoques</title>
+{% endblock %}
+
+{% block body %}
+<div class="just">
+<h3 >Types d'epoques</h3>
+<a  href="/type-epoque/add">ajouter un type d'epoques</a>
+</div>
+<br><br>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>id</th><th>designation</th><th>opération</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+    {% if typesEpoque | length >= 1 %}
+        {% for ligne in typesEpoque %}
+           <tr>
+                  <td>{{ ligne.id }}</td>
+                  <td>{{ ligne.libelle }}</td>
+                  <td>
+                      <a href="/type-epoque/edit?id={{ ligne.id }}">editer</a>&nbsp;
+                      <a href="/type-epoque/delete?id={{ ligne.id }}" >supprimer</a>
+                  </td>
+           </tr>
+        {% endfor %}
+    {% else %}
+            <tr>
+                  <td>
+                      pas de type d'article
+                  </td>
+           </tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}

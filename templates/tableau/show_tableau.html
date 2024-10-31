@@ -1,0 +1,59 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>afficher les monuments</title>
+{% endblock %}
+
+
+{% block body %}
+
+<div class="just">
+<h3 >Monuments</h3>
+<a  href="/tableau/add">ajouter un monuments</a>
+</div>
+<br><br>
+
+<table class="table">
+    <thead class="thead-dark">
+        <tr>
+            <th>id</th><th>nomTableau</th><th>prixAssurance</th><th>dateRealisation</th><th>peintre</th><th>localisationMusee</th><th>photo</th><th>mouvement</th><th>typeEpoque_id</th>
+        </tr>
+    </thead>
+    <tbody>
+
+
+    {% if tableaux | length >= 1 %}
+        {% for ligne in tableaux %}
+           <tr>
+               <td>{{ ligne.id }}</td>
+               <td>{{ ligne.nomTableau }}</td>
+               <td>{{ ligne.prixAssurance }}</td>
+               <td>{{ ligne.dateRealisation }}</td>
+               <td>{{ ligne.peintre }}</td>
+               <td>{{ ligne.localisationMusee }}</td>
+               <td>
+                   {%  if ligne.photo is not none and ligne.photo != "" %}
+    <img style="width:40px;height:40px"  src="{{ url_for('static', filename = 'photos/' + ligne['photo']) }}"  alt="photo  de {{ ligne.nom }}" >
+{% else %}
+    <img style="width:40px;height:40px"   src="{{ url_for('static', filename='photos/no_photo.jpeg')}}"  alt="no photo" >
+{% endif %}
+               </td>
+               <td>{{ ligne.mouvement }}</td>
+               <td>{{ ligne.typeEpoque_id }}</td>
+
+                  <td>
+                      <a href="/tableau/edit?id={{ ligne.id }}">editer</a>&nbsp;
+                      <a href="/tableau/delete?id={{ ligne.id }}" >supprimer</a>
+                  </td>
+           </tr>
+        {% endfor %}
+    {% else %}
+            <tr>
+                  <td>
+                      pas de de monuments
+                  </td>
+           </tr>
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}

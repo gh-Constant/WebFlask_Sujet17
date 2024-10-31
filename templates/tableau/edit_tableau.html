@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>modifier un monument</title>
+{% endblock %}
+
+{% block body %}
+  <h2>modifier un monument</h2>
+
+  <form method="post" action="/tableau/edit">
+    <fieldset>
+        <legend> Modifier un article</legend>
+        <input type="hidden" name="id" size="18" value="{{ tableau.id }}" id="id">
+        <label for="nomTableau">nomTableau</label><br>
+        <input type="text" name="nomTableau" size="18" value="{{ tableau.nomTableau }}" id="nomTableau"><br>
+        <label for="prixAssurance">prixAssurance</label><br>
+        <input type="text" name="prixAssurance" size="18" value="{{ tableau.prixAssurance }}" id="prixAssurance"><br>
+        <label for="dateRealisation">dateRealisation</label><br>
+        <input type="text" name="dateRealisation" size="18" value="{{ tableau.dateRealisation }}" id="dateRealisation"><br>
+        <label for="peintre">peintre</label><br>
+        <input type="text" name="peintre" size="18" value="{{ tableau.peintre }}" id="peintre"><br>
+        <label for="localisationMusee">localisationMusee</label><br>
+        <input type="text" name="localisationMusee" size="18" value="{{ tableau.localisationMusee }}" id="localisationMusee"><br>
+        <label for="photo">photo</label><br>
+        <input type="text" name="photo" size="18" value="{{ tableau.photo }}" id="photo"><br>
+        <label for="mouvement">mouvement</label><br>
+        <input type="text" name="mouvement" size="18" value="{{ tableau.mouvement }}" id="mouvement"><br>
+
+        <label for="typeEpoque_id">typeEpoque_id</label><br>
+        <select name="typeEpoque_id" required> <br>
+            {% for type in typesEpoque %}
+                <option value="{{ type.id }}"
+                    {% if tableau.typesEpoque_id is defined and type.id ==  tableau.typesEpoque_id %}selected{% endif %}> {{ type.libelle }}
+                </option>
+            {% endfor %}
+        </select><br>
+
+        <input type="submit" value="Modifier" name="Modifier" >
+    </fieldset>
+  </form>
+{% endblock %}

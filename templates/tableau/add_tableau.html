@@ -1,0 +1,39 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>ajouter un monument</title>
+{% endblock %}
+
+{% block body %}
+  <h2>ajout d'un monument</h2>
+  <form method="post" action="/tableau/add" >
+    <fieldset>
+        <legend> Créer un monument</legend>
+        <input type="hidden" name="id" size="18" value="" id="id">
+        <label for="nomTableau">nomTableau</label><br>
+        <input type="text" name="nomTableau" size="18" value="" id="nomTableau"><br>
+        <label for="prixAssurance">prixAssurance</label><br>
+        <input type="text" name="prixAssurance" size="18" value="" id="prixAssurance"><br>
+        <label for="dateRealisation">dateRealisation</label><br>
+        <input type="text" name="dateRealisation" size="18" value="" id="dateRealisation"><br>
+        <label for="peintre">peintre</label><br>
+        <input type="text" name="peintre" size="18" value="" id="peintre"><br>
+        <label for="localisationMusee">localisationMusee</label><br>
+        <input type="text" name="localisationMusee" size="18" value="" id="localisationMusee"><br>
+        <label for="photo">photo</label><br>
+        <input type="text" name="photo" size="18" value="" id="photo"><br>
+        <label for="mouvement">mouvement</label><br>
+        <input type="text" name="mouvement" size="18" value="" id="mouvement"><br>
+
+        <label for="typesEpoque_id">typesEpoque_id</label><br>
+        <select name="typesEpoque_id" required> <br>
+            <option value="">Sélectionner un type d'epoques</option>
+                {% for type in typesEpoque %}
+                    <option value="{{ type.id }}"> {{ type.libelle }} </option>
+                {% endfor %}
+        </select> <br>
+
+        <input type="submit" value="Creer" name="Valider" >
+    </fieldset>
+  </form>
+{% endblock %}

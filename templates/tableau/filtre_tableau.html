@@ -1,0 +1,74 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Filtrer les monuments</title>
+{% endblock %}
+
+{% block body %}
+    <div class="w-100 h-100 container">
+          <form method="post" action="/tableau/filtre">
+            <fieldset class="">
+                <div class="">
+                <h3 class="text-center fs-25 mt-4">Les Filtres</h3>
+
+
+                <h2>Filtrer le nom</h2>
+
+                <label for="TableauNameFilter">TableauNameFilter</label><br>
+                <input type="text" name="TableauNameFilter" size="18" placeholder="Recherche" value="" id="TableauNameFilter"><br>
+
+                <br>
+                <div>
+                <h2>Types de tableaux</h2>
+
+                {% for type in typesEpoque %}
+                    <input type="checkbox" name="typeEpoque_id" value="{{ type.id }}" id="typeEpoque_id"> {{ type.libelle }} <br>
+                {% endfor %} <br>
+
+                </div>
+
+                <div>
+                <h2>Prix :</h2>
+
+
+                </div>
+
+
+                <label for="prixMin">Prix min</label>
+                <label style="margin-left: 10%" for="prixMax">Prix max</label> <br>
+                <input type="text" name="prixMin" size="18" value="" id="prixMin">
+
+                <input type="text" name="prixMax" size="18" value="" id="prixMax"><br>
+
+                <br>
+
+                <input type="submit" value="Filtrer" name="Filtrer" >
+                </div>
+
+                <div class="m-lg-3 row ">
+                    <div class="card d-flex flex-wrap">
+                       {% if tableau | length >= 1 %}
+                            {% for ligne in tableau %}
+                                <div class="col-12 col-md-6 col-lg-4 mb-3">
+                                    <div>
+                                    {%  if ligne.photo is not none and ligne.photo != "" %}
+                                        <img style="width:200px;height:200px" class="card-img-top"  src="{{ url_for('static', filename = 'photos/' + ligne['photo']) }}"  alt="photo  de {{ ligne.nom }}" >
+                                    {% else %}
+                                        <img style="width:200px;height:200px" class="card-img-top"  src="{{ url_for('static', filename='photos/no_photo.jpeg')}}"  alt="no photo" >
+                                    {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                                <tr>
+                                      <td>
+                                          pas de de monuments
+                                      </td>
+                               </tr>
+                        {% endif %}
+                    </div>
+                </div>
+            </fieldset>
+          </form>
+    </div>
+{% endblock %}
