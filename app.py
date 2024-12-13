@@ -1,28 +1,24 @@
-from flask import Flask, request, render_template, redirect, url_for, abort, flash
+from flask import Flask, request, render_template, redirect, url_for, abort, flash, g
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.secret_key = 'une cle(token) : grain de sel(any random string)'
 
-typesEpoque = [
-{'id': 1,'libelle': 'Renaissance'},
- {'id': 2,'libelle': 'Temps Modernes'},
- {'id': 3,'libelle': 'Contemporain'},
- {'id': 4,'libelle': 'Moyen-Age'}
-]
+import pymysql.cursors
 
-tableaux = [
-{'id':1,'nomTableau':'La Joconde', 'prixAssurance':'4000','dateRealisation':'1506-10-21', 'peintre':'Léonard de Vinci', 'localisationMusee':'Louvre', 'photo':'laJoconde.jpeg', 'mouvement':None, 'typeEpoque_id':1},
- {'id':2,'nomTableau':'Le Radeau de La Méduse', 'prixAssurance':'300.2','dateRealisation':'1819-03-15', 'peintre':'Théodore Géricault', 'localisationMusee':'Louvre', 'photo':'leRadeauDeLaMeduse.jpeg', 'mouvement':'romantisme', 'typeEpoque_id':3},
- {'id':3,'nomTableau':'Guernica', 'prixAssurance':'200.6','dateRealisation':'1937-06-04', 'peintre':'Pablo Picasso', 'localisationMusee':'Reina Sofia', 'photo':'guernica.jpeg', 'mouvement':'cubisme','typeEpoque_id':3},
- {'id':4,'nomTableau':"L'Ecole d'Athène", 'prixAssurance':'105.3','dateRealisation':'1512-02-21', 'peintre':'Raphaël', 'localisationMusee':'Vatican', 'photo':'lEcoleDAthene.jpeg', 'mouvement':'maniérisme', 'typeEpoque_id':1},
- {'id':5,'nomTableau':'La Jeune Fille à la perle', 'prixAssurance':'2040','dateRealisation':'1665-11-12', 'peintre':'Johannes Vermeer', 'localisationMusee':'Mauritshuis', 'photo':'laJeuneFilleALaPerle.jpeg', 'mouvement':'baroque', 'typeEpoque_id':2},
- {'id':6,'nomTableau':'La Laitière', 'prixAssurance':'3040','dateRealisation':'1658-05-30', 'peintre':'Johannes Vermeer', 'localisationMusee':'Rijksmuseum', 'photo':'laLaitière.jpeg', 'mouvement':'baroque', 'typeEpoque_id':2},
- {'id':7,'nomTableau':'Le Calvaire', 'prixAssurance':'5060','dateRealisation':'1505-09-30', 'peintre':'Josse Lieferinxe', 'localisationMusee':'Louvre', 'photo':'leCalvaire.jpeg','mouvement':None, 'typeEpoque_id':1},
- {'id':9,'nomTableau':'Portrait du bouffon Gonella', 'prixAssurance':'1230','dateRealisation':'1445-03-18', 'peintre':'Jean Fouquet', 'localisationMusee':'Kunsthistorisches Museum', 'photo':'leProtraitduBouffonGonella.jpeg','mouvement':None, 'typeEpoque_id':4},
- {'id':10,'nomTableau':'La liberté guidant le peuple', 'prixAssurance':'150.5','dateRealisation':'1830-12-25', 'peintre':'Eugène DelaCroix', 'localisationMusee':'Louvre', 'photo':'laLiberteGuidantlePeuple.jpeg','mouvement': 'romantisme', 'typeEpoque_id':3},
- {'id':11,'nomTableau':"Rentable de l'Agneau mystique", 'prixAssurance':'1010','dateRealisation':'1432-01-05', 'peintre':'Jan van Eyck', 'localisationMusee':'Cathédrale Saint-Bavon de Gand', 'photo':'AgneauMystique.jpeg','mouvement':None, 'typeEpoque_id':4}
-]
+def get_db():
+    if 'db' not in g:
+        g.db = pymysql.connect(
+            host="localhost",
+            user="constantsuchet",
+            password="Password123!",
+            database="monuments_db",
+            charset='utf8mb4',
+            cursorclass=pymysql.cursors.DictCursor
+        )
+    return g.db
+
+
 
 @app.route('/')
 def show_accueil():
