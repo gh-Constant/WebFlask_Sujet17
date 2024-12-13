@@ -39,78 +39,80 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="page-header text-center">
-        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">Monuments Historiques</h2>
-        <a href="/tableau/add" class="btn btn-brown mt-3">
-            <i class="fas fa-plus-circle"></i> Ajouter un monument
-        </a>
-    </div>
+<div class="page-transition">
+    <div class="container">
+        <div class="page-header text-center">
+            <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">Monuments Historiques</h2>
+            <a href="/tableau/add" class="btn btn-brown mt-3">
+                <i class="fas fa-plus-circle"></i> Ajouter un monument
+            </a>
+        </div>
 
-    <div class="table-responsive">
-        <table class="table custom-table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Prix Assurance (€)</th>
-                    <th>Date Réalisation</th>
-                    <th>Artiste</th>
-                    <th>Localisation</th>
-                    <th>Photo</th>
-                    <th>Mouvement</th>
-                    <th>Époque</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% if tableaux %}
-                    {% for tableau in tableaux %}
-                        <tr>
-                            <td>{{ tableau.id }}</td>
-                            <td>{{ tableau.nomTableau }}</td>
-                            <td>{{ "{:,.2f}".format(tableau.prixAssurance) }}</td>
-                            <td>{{ tableau.dateRealisation }}</td>
-                            <td>{{ tableau.peintre }}</td>
-                            <td>{{ tableau.localisationMusee }}</td>
-                            <td>
-                                {% if tableau.photo %}
-                                    <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
-                                         alt="{{ tableau.nomTableau }}" 
-                                         style="width: 50px; height: 50px; object-fit: cover;"
-                                         class="img-thumbnail">
-                                {% else %}
-                                    <i class="fas fa-image text-muted"></i>
-                                {% endif %}
-                            </td>
-                            <td>{{ tableau.mouvement or '-' }}</td>
-                            <td>
-                                {% for type in typesEpoque %}
-                                    {% if type.id == tableau.typeEpoque_id %}
-                                        {{ type.libelle }}
-                                    {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <div class="btn-group">
-                                    <a href="/tableau/edit?id={{ tableau.id }}" class="btn btn-sm btn-outline-secondary">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <a href="/tableau/delete?id={{ tableau.id }}" class="btn btn-sm btn-outline-danger" 
-                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce monument ?')">
-                                        <i class="fas fa-trash"></i>
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                {% else %}
+        <div class="table-responsive">
+            <table class="table custom-table">
+                <thead>
                     <tr>
-                        <td colspan="10" class="text-center">Aucun monument trouvé</td>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prix Assurance (€)</th>
+                        <th>Date Réalisation</th>
+                        <th>Artiste</th>
+                        <th>Localisation</th>
+                        <th>Photo</th>
+                        <th>Mouvement</th>
+                        <th>Époque</th>
+                        <th>Actions</th>
                     </tr>
-                {% endif %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {% if tableaux %}
+                        {% for tableau in tableaux %}
+                            <tr>
+                                <td>{{ tableau.id }}</td>
+                                <td>{{ tableau.nomTableau }}</td>
+                                <td>{{ "{:,.2f}".format(tableau.prixAssurance) }}</td>
+                                <td>{{ tableau.dateRealisation }}</td>
+                                <td>{{ tableau.peintre }}</td>
+                                <td>{{ tableau.localisationMusee }}</td>
+                                <td>
+                                    {% if tableau.photo %}
+                                        <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
+                                             alt="{{ tableau.nomTableau }}" 
+                                             style="width: 50px; height: 50px; object-fit: cover;"
+                                             class="img-thumbnail">
+                                    {% else %}
+                                        <i class="fas fa-image text-muted"></i>
+                                    {% endif %}
+                                </td>
+                                <td>{{ tableau.mouvement or '-' }}</td>
+                                <td>
+                                    {% for type in typesEpoque %}
+                                        {% if type.id == tableau.typeEpoque_id %}
+                                            {{ type.libelle }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </td>
+                                <td>
+                                    <div class="btn-group">
+                                        <a href="/tableau/edit?id={{ tableau.id }}" class="btn btn-sm btn-outline-secondary">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="/tableau/delete?id={{ tableau.id }}" class="btn btn-sm btn-outline-danger" 
+                                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce monument ?')">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="10" class="text-center">Aucun monument trouvé</td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 {% endblock %}

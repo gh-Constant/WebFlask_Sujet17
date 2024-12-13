@@ -1,19 +1,85 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>modifier un type d'article</title>
+    <title>Modifier un Type d'Époque</title>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            background: #f4e4bc;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+        .form-label {
+            color: #8b4513;
+            font-weight: 500;
+        }
+        .form-control {
+            border: 1px solid #8b4513;
+            padding: 0.5rem;
+        }
+        .form-control:focus {
+            border-color: #6b3410;
+            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+        }
+        .btn-brown {
+            background-color: #8b4513;
+            color: #f4e4bc;
+            border: none;
+        }
+        .btn-brown:hover {
+            background-color: #6b3410;
+            color: #f4e4bc;
+        }
+        .page-header {
+            background: #f4e4bc;
+            padding: 2rem;
+            border-bottom: 2px solid #8b4513;
+            margin-bottom: 2rem;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-  <h2>modifier un type d'article</h2>
+<div class="animate-page">
+    <div class="container">
+        <div class="page-header text-center">
+            <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+                Modifier un Type d'Époque
+            </h2>
+        </div>
 
-  <form method="post" action="/type-epoque/edit">
-    <fieldset>
-        <legend> Modifier un type d'article</legend>
-        <input type="hidden" name="id" size="18" value="{{ type_epoque.id }}" id="id">
-        <label for="libelle">libelle</label><br>
-        <input type="text" name="libelle" size="18" value="{{ type_epoque.libelle }}" id="libelle"><br>
-        <input type="submit" value="Modifier" name="Modifier" >
-    </fieldset>
-  </form>
+        <div class="form-container">
+            <form method="post" action="/type-epoque/edit">
+                <input type="hidden" name="id" value="{{ type_epoque.id }}">
+                
+                <div class="mb-3">
+                    <label for="libelle" class="form-label">Désignation de l'Époque</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="libelle" 
+                           name="libelle" 
+                           value="{{ type_epoque.libelle }}" 
+                           required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-brown">
+                        <i class="fas fa-save"></i> Enregistrer
+                    </button>
+                    <a href="/type-epoque/show" class="btn btn-outline-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,25 @@
+.page-header {
+    background: #f4e4bc;
+    padding: 2rem;
+    border-bottom: 2px solid #8b4513;
+    margin-bottom: 2rem;
+}
+
+.btn-brown {
+    background-color: #8b4513;
+    color: #f4e4bc;
+    border: none;
+}
+
+.btn-brown:hover {
+    background-color: #6b3410;
+    color: #f4e4bc;
+}
+
+.epoch-badge {
+    background: #8b4513;
+    color: #f4e4bc;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.9rem;
+} 

@@ -1,0 +1,70 @@
+.painting-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 2rem;
+}
+
+.painting-card {
+    background: #fff;
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(139, 69, 19, 0.1);
+}
+
+.painting-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(139, 69, 19, 0.2);
+}
+
+.painting-image {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-bottom: 2px solid #8b4513;
+}
+
+.painting-info {
+    padding: 1.5rem;
+    background: #f4e4bc;
+}
+
+.painting-title {
+    color: #8b4513;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    font-family: 'Playfair Display', serif;
+}
+
+.painting-details {
+    color: #5c3317;
+    font-size: 0.9rem;
+}
+
+.monument-card {
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    background: #fff;
+}
+
+.monument-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
+}
+
+.monument-img {
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 2px solid #8b4513;
+}
+
+.monument-info {
+    padding: 1.5rem;
+    background: #f4e4bc;
+} 

@@ -21,6 +21,9 @@
         <li class="nav-item {{ 'active' if '/type-epoque/show' in request.path }}">
           <a class="nav-link" href="/type-epoque/show"><i class="fas fa-clock"></i> Époques</a>
         </li>
+        <li class="nav-item {{ 'active' if '/tableau/etat' in request.path }}">
+          <a class="nav-link" href="/tableau/etat"><i class="fas fa-chart-bar"></i> État des Monuments</a>
+        </li>
         <li class="nav-item {{ 'active' if '/tableau/filtre' in request.path }}">
           <a class="nav-link" href="/tableau/filtre"><i class="fas fa-filter"></i> Filtrer</a>
         </li>
@@ -28,110 +31,3 @@
     </div>
   </div>
 </nav>
-
-<style>
-.custom-navbar {
-  background: linear-gradient(to bottom, #f8e7c9 0%, #f4e4bc 100%);
-  border-bottom: 3px solid #8b4513;
-  box-shadow: 0 2px 15px rgba(139, 69, 19, 0.1);
-  font-family: 'Playfair Display', serif;
-  padding: 0.8rem 0;
-  position: relative;
-  margin-bottom: 2rem;
-}
-
-.custom-navbar::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(to right, transparent, #8b4513, transparent);
-}
-
-.brand-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.vintage-brand {
-  font-size: 1.8rem;
-  color: #6b3410 !important;
-  font-weight: bold;
-  letter-spacing: 1.5px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease;
-}
-
-.vintage-brand:hover {
-  transform: scale(1.02);
-}
-
-.brand-historic {
-  color: #8b4513;
-  font-style: italic;
-  margin-left: 5px;
-}
-
-.navbar-nav {
-  margin-right: 20px;
-}
-
-.navbar-nav .nav-link {
-  color: #5c3317 !important;
-  margin: 0 15px;
-  font-size: 1.2rem;
-  transition: all 0.3s ease;
-  position: relative;
-  padding: 0.5rem 0;
-}
-
-.navbar-nav .nav-link::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  width: 0;
-  height: 2px;
-  background: #8b4513;
-  transition: all 0.3s ease;
-  transform: translateX(-50%);
-}
-
-.navbar-nav .nav-link:hover::after {
-  width: 100%;
-}
-
-.navbar-nav .nav-link:hover {
-  color: #8b4513 !important;
-  transform: translateY(-2px);
-}
-
-.nav-item.active .nav-link {
-  font-weight: bold;
-  color: #8b4513 !important;
-}
-
-.nav-item.active .nav-link::after {
-  width: 100%;
-}
-
-.navbar-nav .nav-link i {
-  margin-right: 8px;
-  font-size: 1.1rem;
-  opacity: 0.8;
-}
-
-@media (max-width: 991px) {
-  .navbar-nav .nav-link {
-    padding: 0.8rem 0;
-    border-bottom: 1px solid rgba(139, 69, 19, 0.1);
-  }
-  
-  .navbar-nav .nav-link::after {
-    display: none;
-  }
-}
-</style>

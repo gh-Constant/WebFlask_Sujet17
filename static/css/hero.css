@@ -1,0 +1,32 @@
+.hero-section {
+    background: linear-gradient(rgba(89, 55, 37, 0.7), rgba(89, 55, 37, 0.7)), 
+                url('../images/versailles.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #f4e4bc;
+}
+
+.section-header {
+    text-align: center;
+    padding: 3rem 0;
+    background: #f4e4bc;
+    border-bottom: 3px solid #8b4513;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    color: #8b4513;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.section-subtitle {
+    color: #5c3317;
+    font-size: 1.2rem;
+} 

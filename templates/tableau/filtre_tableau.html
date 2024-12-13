@@ -59,94 +59,96 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <div class="page-header text-center">
-        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
-            Filtrer les Monuments
-        </h2>
-    </div>
+<div class="page-transition">
+    <div class="container">
+        <div class="page-header text-center">
+            <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+                Filtrer les Monuments
+            </h2>
+        </div>
 
-    <!-- Formulaire de filtrage -->
-    <form method="post" action="/tableau/filtre" class="filter-form mb-4">
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <label for="TableauNameFilter" class="form-label">Nom du monument</label>
-                <input type="text" class="form-control" id="TableauNameFilter" name="TableauNameFilter" 
-                       placeholder="Rechercher un monument...">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label class="form-label">Type d'époque</label>
-                <div class="d-flex flex-wrap gap-2">
-                    {% for type in typesEpoque %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="typeEpoque_id" 
-                                   value="{{ type.id }}" id="type_{{ type.id }}">
-                            <label class="form-check-label" for="type_{{ type.id }}">
-                                {{ type.libelle }}
-                            </label>
-                        </div>
-                    {% endfor %}
+        <!-- Formulaire de filtrage -->
+        <form method="post" action="/tableau/filtre" class="filter-form mb-4">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="TableauNameFilter" class="form-label">Nom du monument</label>
+                    <input type="text" class="form-control" id="TableauNameFilter" name="TableauNameFilter" 
+                           placeholder="Rechercher un monument...">
                 </div>
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="prixMin" class="form-label">Prix minimum (€)</label>
-                <input type="number" class="form-control" id="prixMin" name="prixMin">
-            </div>
-            <div class="col-md-6 mb-3">
-                <label for="prixMax" class="form-label">Prix maximum (€)</label>
-                <input type="number" class="form-control" id="prixMax" name="prixMax">
-            </div>
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-brown">
-                <i class="fas fa-search"></i> Rechercher
-            </button>
-        </div>
-    </form>
-
-    <!-- Résultats -->
-    <div class="row g-4">
-        {% if tableaux %}
-            {% for tableau in tableaux %}
-                <div class="col-md-6 col-lg-4">
-                    <div class="monument-card">
-                        {% if tableau.photo %}
-                            <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
-                                 alt="{{ tableau.nomTableau }}" 
-                                 class="monument-img w-100">
-                        {% else %}
-                            <div class="monument-img w-100 d-flex align-items-center justify-content-center bg-light">
-                                <i class="fas fa-image fa-3x text-muted"></i>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Type d'époque</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        {% for type in typesEpoque %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="typeEpoque_id" 
+                                       value="{{ type.id }}" id="type_{{ type.id }}">
+                                <label class="form-check-label" for="type_{{ type.id }}">
+                                    {{ type.libelle }}
+                                </label>
                             </div>
-                        {% endif %}
-                        <div class="monument-info">
-                            <h4 class="h5 mb-3">{{ tableau.nomTableau }}</h4>
-                            <p class="mb-2">
-                                <i class="fas fa-user-alt"></i> {{ tableau.peintre or 'Artiste inconnu' }}
-                            </p>
-                            <p class="mb-2">
-                                <i class="fas fa-map-marker-alt"></i> {{ tableau.localisationMusee }}
-                            </p>
-                            <p class="mb-2">
-                                <i class="fas fa-calendar-alt"></i> {{ tableau.dateRealisation }}
-                            </p>
-                            {% if tableau.mouvement %}
-                                <span class="epoch-badge mb-3 d-inline-block">
-                                    {{ tableau.mouvement }}
-                                </span>
-                            {% endif %}
-                            <p class="price-tag mt-2 mb-0">
-                                {{ "{:,.2f}".format(tableau.prixAssurance) }} €
-                            </p>
-                        </div>
+                        {% endfor %}
                     </div>
                 </div>
-            {% endfor %}
-        {% else %}
-            <div class="col-12 text-center">
-                <p class="text-muted">Aucun monument trouvé</p>
+                <div class="col-md-6 mb-3">
+                    <label for="prixMin" class="form-label">Prix minimum (€)</label>
+                    <input type="number" class="form-control" id="prixMin" name="prixMin">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="prixMax" class="form-label">Prix maximum (€)</label>
+                    <input type="number" class="form-control" id="prixMax" name="prixMax">
+                </div>
             </div>
-        {% endif %}
+            <div class="text-center">
+                <button type="submit" class="btn btn-brown">
+                    <i class="fas fa-search"></i> Rechercher
+                </button>
+            </div>
+        </form>
+
+        <!-- Résultats -->
+        <div class="row g-4">
+            {% if tableaux %}
+                {% for tableau in tableaux %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="monument-card">
+                            {% if tableau.photo %}
+                                <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
+                                     alt="{{ tableau.nomTableau }}" 
+                                     class="monument-img w-100">
+                            {% else %}
+                                <div class="monument-img w-100 d-flex align-items-center justify-content-center bg-light">
+                                    <i class="fas fa-image fa-3x text-muted"></i>
+                                </div>
+                            {% endif %}
+                            <div class="monument-info">
+                                <h4 class="h5 mb-3">{{ tableau.nomTableau }}</h4>
+                                <p class="mb-2">
+                                    <i class="fas fa-user-alt"></i> {{ tableau.peintre or 'Artiste inconnu' }}
+                                </p>
+                                <p class="mb-2">
+                                    <i class="fas fa-map-marker-alt"></i> {{ tableau.localisationMusee }}
+                                </p>
+                                <p class="mb-2">
+                                    <i class="fas fa-calendar-alt"></i> {{ tableau.dateRealisation }}
+                                </p>
+                                {% if tableau.mouvement %}
+                                    <span class="epoch-badge mb-3 d-inline-block">
+                                        {{ tableau.mouvement }}
+                                    </span>
+                                {% endif %}
+                                <p class="price-tag mt-2 mb-0">
+                                    {{ "{:,.2f}".format(tableau.prixAssurance) }} €
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12 text-center">
+                    <p class="text-muted">Aucun monument trouvé</p>
+                </div>
+            {% endif %}
+        </div>
     </div>
 </div>
 {% endblock %}

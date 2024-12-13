@@ -6,12 +6,18 @@
         {% block title %}
             <title>layout</title>
         {% endblock %}
-        <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" >
-        {% block stylesheets %}
-            <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
-            <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-            <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-        {% endblock %}
+        <link rel="shortcut icon" href="/static/favicon.ico">
+        <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.css">
+        <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/static/css/animations.css">
+        <link rel="stylesheet" href="/static/css/navbar.css">
+        <link rel="stylesheet" href="/static/css/tables.css">
+        <link rel="stylesheet" href="/static/css/forms.css">
+        <link rel="stylesheet" href="/static/css/cards.css">
+        <link rel="stylesheet" href="/static/css/common.css">
+        <link rel="stylesheet" href="/static/css/hero.css">
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
 
@@ -27,11 +33,12 @@
     {% endif %}
     {% endwith %}
 
-    {% block body %}
-        <h2 style="color:blue">layout.html</h2>
-    {% endblock %}
-    {% block javascripts %}
-        {#<script src="{{ url_for('static', filename='bootstrap/js/bootstrap.js') }}"></script>#}
-    {% endblock %}
+    <div class="animate-page">
+        {% block body %}
+            <h2 style="color:blue">layout.html</h2>
+        {% endblock %}
+    </div>
+
+    {% block javascripts %}{% endblock %}
     </body>
     </html>

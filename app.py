@@ -258,3 +258,38 @@ def valid_filtre_tableau():
     typesEpoque = mycursor.fetchall()
 
     return render_template('tableau/filtre_tableau.html', tableaux=tableaux, typesEpoque=typesEpoque)
+
+@app.route('/tableau/etat')
+def etat_tableau():
+    mycursor = get_db().cursor()
+    
+    # Get period types with their painting counts
+    mycursor.execute("""
+        SELECT type_epoque.libelle as period_name, COUNT(tableaux.id) as painting_count
+        FROM type_epoque
+        LEFT JOIN tableaux ON type_epoque.id = tableaux.typeEpoque_id
+        GROUP BY type_epoque.id, type_epoque.libelle
+        ORDER BY type_epoque.libelle
+    """)
+    period_stats = mycursor.fetchall()
+    
+    # Get total number of paintings
+    mycursor.execute("SELECT COUNT(*) as total FROM tableaux")
+    total_paintings = mycursor.fetchone()['total']
+    
+    # Get total insurance value
+    mycursor.execute("SELECT SUM(prixAssurance) as total_insurance FROM tableaux")
+    total_insurance = mycursor.fetchone()['total_insurance'] or 0
+    
+    # Prepare chart data
+    chart_names = [stat['period_name'] for stat in period_stats]
+    chart_amounts = [float(stat['painting_count']) for stat in period_stats]
+    
+    return render_template(
+        'tableau/etat_tableau.html',
+        period_stats=period_stats,
+        total_paintings=total_paintings,
+        total_insurance=total_insurance,
+        chart_names=chart_names,
+        chart_amounts=chart_amounts
+    )

@@ -1,0 +1,146 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>État des Monuments</title>
+{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js"></script>
+    <style>
+        .page-header {
+            background: #f4e4bc;
+            padding: 2rem;
+            border-bottom: 2px solid #8b4513;
+            margin-bottom: 2rem;
+        }
+        .stats-container {
+            background: #fff;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="page-header text-center">
+        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+            État des Tableaux
+        </h2>
+    </div>
+
+    <div class="stats-container">
+        <h2>Valeur totale du patrimoine : <span style="color: #8b4513;">{{ total_insurance }}€</span>
+            Nombre de tableaux : <span style="color: #8b4513;">{{ total_paintings }}</span></h2>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th>Époque</th>
+                    <th>Nombre de tableaux</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for stat in period_stats %}
+                <tr>
+                    <td>{{ stat.period_name }}</td>
+                    <td><span style="color: #8b4513">
+                        {% if stat.painting_count > 0 %}
+                            {{ stat.painting_count }}
+                        {% else %}
+                            pas de tableau
+                        {% endif %}
+                    </span></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Bar Chart -->
+    <div class="chart-container">
+        <canvas id="barChart"></canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="chart-container">
+        <canvas id="pieChart"></canvas>
+    </div>
+</div>
+
+<script>
+    var chartLabels = [
+        {% for stat in period_stats %}
+            "{{ stat.period_name }}",
+        {% endfor %}
+    ];
+    
+    var chartData = [
+        {% for stat in period_stats %}
+            {{ stat.painting_count }},
+        {% endfor %}
+    ];
+
+    // Bar Chart
+    var ctxBar = document.getElementById('barChart').getContext('2d');
+    var barChart = new Chart(ctxBar, {
+        type: 'bar',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                label: 'Nombre de tableaux par époque',
+                data: chartData,
+                backgroundColor: [
+                    '#8b4513', '#6b3410', '#d4b894', '#f4e4bc', '#a0522d',
+                    '#deb887', '#cd853f', '#d2691e', '#8b4513', '#a0522d'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Pie Chart
+    var ctxPie = document.getElementById('pieChart').getContext('2d');
+    var pieChart = new Chart(ctxPie, {
+        type: 'pie',
+        data: {
+            labels: chartLabels,
+            datasets: [{
+                data: chartData,
+                backgroundColor: [
+                    '#8b4513', '#6b3410', '#d4b894', '#f4e4bc', '#a0522d',
+                    '#deb887', '#cd853f', '#d2691e', '#8b4513', '#a0522d'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            title: {
+                display: true,
+                text: 'Distribution des tableaux par époque'
+            }
+        }
+    });
+</script>
+{% endblock %} 

@@ -1,0 +1,31 @@
+.form-container {
+    background: #f4e4bc;
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 600px;
+}
+
+.form-label {
+    color: #8b4513;
+    font-weight: 500;
+}
+
+.form-control {
+    border: 1px solid #8b4513;
+    padding: 0.5rem;
+}
+
+.form-control:focus {
+    border-color: #6b3410;
+    box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+}
+
+.filter-form {
+    background: #f4e4bc;
+    border: 2px solid #8b4513;
+    border-radius: 10px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+} 
