@@ -53,11 +53,45 @@ def valid_add_type_epoque():
 def delete_type_epoque():
     id = request.args.get('id', '')
     mycursor = get_db().cursor()
-    sql = "DELETE FROM type_epoque WHERE id = " + str(id)
-    mycursor.execute(sql)
+    
+    # Get all tableaux using this type_epoque
+    sql = "SELECT * FROM tableaux WHERE typeEpoque_id = %s"
+    mycursor.execute(sql, (id,))
+    related_tableaux = mycursor.fetchall()
+    
+    # Get the type_epoque details
+    sql = "SELECT * FROM type_epoque WHERE id = %s"
+    mycursor.execute(sql, (id,))
+    type_epoque = mycursor.fetchone()
+    
+    if not related_tableaux:
+        # If no related tableaux, delete directly
+        sql = "DELETE FROM type_epoque WHERE id = %s"
+        mycursor.execute(sql, (id,))
+        get_db().commit()
+        flash(u'Type époque supprimé, id: ' + str(id), 'alert-warning')
+        return redirect('/type-epoque/show')
+    
+    # If there are related tableaux, show confirmation page
+    return render_template('type_epoque/confirm_delete.html', 
+                         type_epoque=type_epoque, 
+                         related_tableaux=related_tableaux)
+
+@app.route('/type-epoque/delete', methods=['POST'])
+def delete_type_epoque_confirm():
+    id = request.form.get('id')
+    mycursor = get_db().cursor()
+    
+    # Delete related tableaux first
+    sql = "DELETE FROM tableaux WHERE typeEpoque_id = %s"
+    mycursor.execute(sql, (id,))
+    
+    # Then delete the type_epoque
+    sql = "DELETE FROM type_epoque WHERE id = %s"
+    mycursor.execute(sql, (id,))
     get_db().commit()
-    message = f"Type d'époque avec l'ID {id} supprimé avec succès."
-    flash(message, 'alert-warning')
+    
+    flash(u'Type époque et tableaux associés supprimés', 'alert-warning')
     return redirect('/type-epoque/show')
 
 @app.route('/type-epoque/edit', methods=['GET'])
@@ -135,13 +169,14 @@ def delete_tableau():
 @app.route('/tableau/edit', methods=['GET'])
 def edit_tableau():
     id = request.args.get('id', '')
-    id=int(id)
-    flash(id, 'alert-success')
+    id = int(id)
     mycursor = get_db().cursor()
-    mycursor.execute("SELECT * FROM tableaux WHERE id = " + str(id))
-    tableau = mycursor.fetchall()
-
-    flash(tableau, 'alert-success')
+    mycursor.execute("SELECT * FROM tableaux WHERE id = %s", (id,))
+    tableau = mycursor.fetchone()
+    
+    if not tableau:
+        flash('Tableau not found', 'alert-d anger')
+        return redirect('/tableau/show')
 
     mycursor.execute("SELECT * FROM type_epoque")
     typesEpoque = mycursor.fetchall()
@@ -160,8 +195,7 @@ def valid_edit_tableau():
     id = request.form.get('id', '')
 
     mycursor = get_db().cursor()
-    sql = """UPDATE tableaux 
-             SET nomTableau = %s, prixAssurance = %s, dateRealisation = %s,
+    sql = """UPDATE tableaux SET nomTableau = %s, prixAssurance = %s, dateRealisation = %s,
                  peintre = %s, localisationMusee = %s, photo = %s,
                  mouvement = %s, typeEpoque_id = %s 
              WHERE id = %s"""

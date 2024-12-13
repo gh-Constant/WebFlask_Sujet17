@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    <title>Confirmer la suppression</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h2>Confirmation de suppression</h2>
+    
+    <div class="alert alert-warning">
+        <h4>Attention!</h4>
+        <p>La suppression du type d'époque "{{ type_epoque.libelle }}" entrainera la suppression des tableaux suivants :</p>
+    </div>
+
+    <ul class="list-group mb-4">
+    {% for tableau in related_tableaux %}
+        <li class="list-group-item">{{ tableau.nomTableau }} ({{ tableau.peintre }})</li>
+    {% endfor %}
+    </ul>
+
+    <form method="post" action="/type-epoque/delete">
+        <input type="hidden" name="id" value="{{ type_epoque.id }}">
+        <button type="submit" class="btn btn-danger">Supprimer tout</button>
+        <a href="/type-epoque/show" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %} 
