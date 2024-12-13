@@ -24,6 +24,7 @@
 
     {% if tableaux | length >= 1 %}
         {% for ligne in tableaux %}
+        
            <tr>
                <td>{{ ligne.id }}</td>
                <td>{{ ligne.nomTableau }}</td>
@@ -46,6 +47,7 @@
                       <a href="/tableau/delete?id={{ ligne.id }}" >supprimer</a>
                   </td>
            </tr>
+       
         {% endfor %}
     {% else %}
             <tr>

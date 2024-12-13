@@ -15,7 +15,7 @@
         <label for="prixAssurance">prixAssurance</label><br>
         <input type="text" name="prixAssurance" size="18" value="" id="prixAssurance"><br>
         <label for="dateRealisation">dateRealisation</label><br>
-        <input type="text" name="dateRealisation" size="18" value="" id="dateRealisation"><br>
+        <input type="date" name="dateRealisation" size="18" value="" id="dateRealisation"><br>
         <label for="peintre">peintre</label><br>
         <input type="text" name="peintre" size="18" value="" id="peintre"><br>
         <label for="localisationMusee">localisationMusee</label><br>
@@ -25,12 +25,12 @@
         <label for="mouvement">mouvement</label><br>
         <input type="text" name="mouvement" size="18" value="" id="mouvement"><br>
 
-        <label for="typesEpoque_id">typesEpoque_id</label><br>
-        <select name="typesEpoque_id" required> <br>
-            <option value="">Sélectionner un type d'epoques</option>
-                {% for type in typesEpoque %}
-                    <option value="{{ type.id }}"> {{ type.libelle }} </option>
-                {% endfor %}
+        <label for="typeEpoque_id">typeEpoque_id</label><br>
+        <select name="typeEpoque_id" required> 
+            <option value="" disabled selected>Sélectionner un type d'epoques</option>
+            {% for type in typesEpoque %}
+                <option value="{{ type.id }}"> {{ type.libelle }} </option>
+            {% endfor %}
         </select> <br>
 
         <input type="submit" value="Creer" name="Valider" >

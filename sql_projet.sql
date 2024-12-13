@@ -1,4 +1,6 @@
 -- Create database
+DROP DATABASE IF EXISTS monuments_db;
+
 CREATE DATABASE IF NOT EXISTS monuments_db;
 USE monuments_db;
 
@@ -9,7 +11,7 @@ CREATE TABLE type_epoque (
 );
 
 -- Create tableau table
-CREATE TABLE tableau (
+CREATE TABLE tableaux (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nomTableau VARCHAR(100) NOT NULL,
     prixAssurance DECIMAL(10,2),
@@ -30,7 +32,7 @@ INSERT INTO type_epoque (id, libelle) VALUES
 (4, 'Moyen-Age');
 
 -- Insert tableau data
-INSERT INTO tableau (id, nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES 
+INSERT INTO tableaux (id, nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES 
 (1, 'La Joconde', 4000, '1506-10-21', 'Léonard de Vinci', 'Louvre', 'laJoconde.jpeg', NULL, 1),
 (2, 'Le Radeau de La Méduse', 300.2, '1819-03-15', 'Théodore Géricault', 'Louvre', 'leRadeauDeLaMeduse.jpeg', 'romantisme', 3),
 (3, 'Guernica', 200.6, '1937-06-04', 'Pablo Picasso', 'Reina Sofia', 'guernica.jpeg', 'cubisme', 3),

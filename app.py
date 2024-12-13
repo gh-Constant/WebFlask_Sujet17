@@ -29,7 +29,9 @@ if __name__ == '__main__':
 
 @app.route('/type-epoque/show')
 def show_type_epoque():
-    #print(typesEpoque)
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM type_epoque")
+    typesEpoque = mycursor.fetchall()
     return render_template('type_epoque/show_type_epoque.html', typesEpoque=typesEpoque)
 
 @app.route('/type-epoque/add', methods=['GET'])
@@ -39,7 +41,10 @@ def add_type_epoque():
 @app.route('/type-epoque/add', methods=['POST'])
 def valid_add_type_epoque():
     libelle = request.form.get('libelle', '')
-    print(u'type ajouté , libellé :', libelle)
+    mycursor = get_db().cursor()
+    sql = "INSERT INTO type_epoque (libelle) VALUES (%s)"
+    mycursor.execute(sql, (libelle,))
+    get_db().commit()
     message = u'type ajouté , libellé :'+libelle
     flash(message, 'alert-success')
     return redirect('/type-epoque/show')
@@ -47,36 +52,53 @@ def valid_add_type_epoque():
 @app.route('/type-epoque/delete', methods=['GET'])
 def delete_type_epoque():
     id = request.args.get('id', '')
-    print ("un type d'tableau supprimé, id :",id)
-    message=u'un type d\'tableau supprimé, id : ' + id
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM type_epoque WHERE id = " + str(id)
+    mycursor.execute(sql)
+    get_db().commit()
+    message = f"Type d'époque avec l'ID {id} supprimé avec succès."
     flash(message, 'alert-warning')
     return redirect('/type-epoque/show')
 
 @app.route('/type-epoque/edit', methods=['GET'])
 def edit_type_epoque():
     id = request.args.get('id', '')
-    libelle = request.args.get('libelle', '')     # comment passé plusieurs paramètres (clé primaire composés)
     id=int(id)
-    type_epoque = typesEpoque[id-1]
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM type_epoque")
+    type_epoque = mycursor.fetchall()
+    type_epoque = type_epoque[id-1] 
     return render_template('type_epoque/edit_type_epoque.html', type_epoque=type_epoque)
 
 @app.route('/type-epoque/edit', methods=['POST'])
 def valid_edit_type_epoque():
     libelle = request.form['libelle']
     id = request.form.get('id', '')
-    print(u'type tableau modifié, id: ',id, " libelle :", libelle)
+    mycursor = get_db().cursor()
+    sql = "UPDATE type_epoque SET libelle = %s WHERE id = %s"
+    mycursor.execute(sql, (libelle, id))
+    get_db().commit()
     message=u'type tableau modifié, id: ' + id + " libelle : " + libelle
     flash(message, 'alert-success')
     return redirect('/type-epoque/show')
 
 @app.route('/tableau/show')
 def show_tableau():
-    # print(tableaux)
-    return render_template('tableau/show_tableau.html', tableaux=tableaux)
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM tableaux")
+    tableaux = mycursor.fetchall()
+    mycursor.execute("SELECT * FROM type_epoque")
+
+    typesEpoque = mycursor.fetchall()
+
+    return render_template('tableau/show_tableau.html', tableaux=tableaux, typesEpoque=typesEpoque)
 
 @app.route('/tableau/add', methods=['GET'])
 def add_tableau():
-    return render_template('tableau/add_tableau.html', typesEpoque=typesEpoque)
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM type_epoque")
+    type_epoque = mycursor.fetchall()   
+    return render_template('tableau/add_tableau.html', typesEpoque=type_epoque)
 
 @app.route('/tableau/add', methods=['POST'])
 def valid_add_tableau():
@@ -85,10 +107,16 @@ def valid_add_tableau():
     dateRealisation = request.form.get('dateRealisation', '')
     peintre = request.form.get('peintre', '')
     localisationMusee = request.form.get('localisationMusee', '')
-    type_epoque_id = request.form.get('type_epoque_id', '')
+    typeEpoque_id = request.form.get('typeEpoque_id', '')
     photo = request.form.get('photo', '')
     mouvement = request.form.get('mouvement', '')
-    message = u'tableau ajouté , nom:'+nomTableau + '---- type_epoque_id :' + type_epoque_id + ' ---- prixAssurance:' + prixAssurance + ' - dateRealisation:'+  dateRealisation + ' - peintre:' + peintre + ' - localisationMusee:' + localisationMusee + ' - photo:' + photo + ' - mouvement:' + mouvement
+
+    mycursor = get_db().cursor()
+    sql = "INSERT INTO tableaux (nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+    mycursor.execute(sql, (nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id))
+    get_db().commit()
+
+    message = u'tableau ajouté , nom:'+nomTableau + '---- type_epoque_id :' + typeEpoque_id + ' ---- prixAssurance:' + prixAssurance + ' - dateRealisation:'+  dateRealisation + ' - peintre:' + peintre + ' - localisationMusee:' + localisationMusee + ' - photo:' + photo + ' - mouvement:' + mouvement
     print(message)
     flash(message, 'alert-success')
     return redirect('/tableau/show')
@@ -96,6 +124,10 @@ def valid_add_tableau():
 @app.route('/tableau/delete', methods=['GET'])
 def delete_tableau():
     id = request.args.get('id', '')
+    mycursor = get_db().cursor()
+    sql = "DELETE FROM tableaux WHERE id = " + str(id)
+    mycursor.execute(sql)
+    get_db().commit()
     message=u'un tableau supprimé, id : ' + id
     flash(message, 'alert-warning')
     return redirect('/tableau/show')
@@ -104,27 +136,53 @@ def delete_tableau():
 def edit_tableau():
     id = request.args.get('id', '')
     id=int(id)
-    tableau = tableaux[id-1]
+    flash(id, 'alert-success')
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM tableaux WHERE id = " + str(id))
+    tableau = mycursor.fetchall()
+
+    flash(tableau, 'alert-success')
+
+    mycursor.execute("SELECT * FROM type_epoque")
+    typesEpoque = mycursor.fetchall()
     return render_template('tableau/edit_tableau.html', tableau=tableau, typesEpoque=typesEpoque)
 
 @app.route('/tableau/edit', methods=['POST'])
 def valid_edit_tableau():
-    id = request.form.get('id', '')
-    nom = request.form.get('nom', '')
-    prix = request.form.get('prix', '')
-    stock = request.form.get('stock', '')
-    description = request.form.get('description', '')
-    image = request.form.get('image', '')
+    nomTableau = request.form.get('nomTableau', '')
+    prixAssurance = request.form.get('prixAssurance', '')
+    dateRealisation = request.form.get('dateRealisation', '')
+    peintre = request.form.get('peintre', '')
+    localisationMusee = request.form.get('localisationMusee', '')
+    photo = request.form.get('photo', '')
     mouvement = request.form.get('mouvement', '')
-    typesEpoque_id = request.form.get('typesEpoque_id', '')
-    message = u'tableau modifié , nom:'+nom + '---- prix :' + prix + ' ---- stock:' + stock + ' ---- description:' + description + ' ---- image:' + image + ' ---- mouvement:' + mouvement + ' ---- typesEpoque_id:' + typesEpoque_id + u' ------ pour l tableau d identifiant :' + id
-    print(message)
+    typeEpoque_id = request.form.get('typeEpoque_id', '')
+    id = request.form.get('id', '')
+
+    mycursor = get_db().cursor()
+    sql = """UPDATE tableaux 
+             SET nomTableau = %s, prixAssurance = %s, dateRealisation = %s,
+                 peintre = %s, localisationMusee = %s, photo = %s,
+                 mouvement = %s, typeEpoque_id = %s 
+             WHERE id = %s"""
+    
+    mycursor.execute(sql, (nomTableau, prixAssurance, dateRealisation, 
+                          peintre, localisationMusee, photo,
+                          mouvement, typeEpoque_id, id))
+    get_db().commit()
+    
+    message = u'tableau modifié, id: ' + id
     flash(message, 'alert-success')
     return redirect('/tableau/show')
 
 @app.route('/tableau/filtre', methods=['GET'])
 def filtre_tableau():
-    return render_template('tableau/filtre_tableau.html', tableau=tableaux, typesEpoque=typesEpoque)
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM type_epoque")
+    typesEpoque = mycursor.fetchall()
+    mycursor.execute("SELECT * FROM tableaux")
+    tableaux = mycursor.fetchall() 
+    return render_template('tableau/filtre_tableau.html', tableaux=tableaux, typesEpoque=typesEpoque)
 
 @app.route('/tableau/filtre', methods=['POST'])
 def valid_filtre_tableau():
@@ -132,6 +190,32 @@ def valid_filtre_tableau():
     typeEpoque_id = request.form.get('typeEpoque_id', '')
     prixMin = request.form.get('prixMin', '')
     prixMax = request.form.get('prixMax', '')
-    message = u'filtre appliqué , nom tableau:'+TableauNameFilter + '---- type_epoque_id :' + typeEpoque_id + ' ---- prixMin:' + prixMin + ' - prixMax:'+  prixMax
-    flash(message, 'alert-success')
-    return redirect('/tableau/filtre')
+
+    sql = "SELECT * FROM tableaux WHERE 1=1"
+    params = ()  
+
+    
+    if TableauNameFilter:
+        sql += " AND nomTableau LIKE %s"
+        params += (f"%{TableauNameFilter}%",)
+    
+    if typeEpoque_id:
+        sql += " AND typeEpoque_id = %s"    
+        params += (typeEpoque_id,)
+    
+    if prixMin:
+        sql += " AND prixAssurance >= %s"
+        params += (prixMin,)
+    
+    if prixMax:
+        sql += " AND prixAssurance <= %s"
+        params += (prixMax,)
+
+    mycursor = get_db().cursor()
+    mycursor.execute(sql, params)  
+    tableaux = mycursor.fetchall()
+
+    mycursor.execute("SELECT * FROM type_epoque")
+    typesEpoque = mycursor.fetchall()
+
+    return render_template('tableau/filtre_tableau.html', tableaux=tableaux, typesEpoque=typesEpoque)
