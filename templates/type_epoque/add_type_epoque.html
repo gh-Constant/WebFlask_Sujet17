@@ -1,17 +1,60 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>ajouter un type d'article</title>
+    <title>Ajouter un Type d'Époque</title>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            background: #f4e4bc;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 600px;
+        }
+        .form-label {
+            color: #8b4513;
+            font-weight: 500;
+        }
+        .form-control {
+            border: 1px solid #8b4513;
+            padding: 0.5rem;
+        }
+        .form-control:focus {
+            border-color: #6b3410;
+            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-  <h2>ajout d'un type d'article</h2>
-  <form method="post" action="/type-epoque/add" >
-    <fieldset>
-        <legend> Créer un type d'article</legend>
-        <label for="libelle">libelle</label><br>
-        <input id="libelle" type="text" name="libelle" size="18" value="" placeholder="Saisir le libelle du type de l'article"><br>
-        <input type="submit" value="Creer" name="Valider" >
-    </fieldset>
-  </form>
+<div class="container">
+    <div class="page-header text-center">
+        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+            Ajouter un Type d'Époque
+        </h2>
+    </div>
+
+    <div class="form-container">
+        <form method="post" action="/type-epoque/add">
+            <div class="mb-3">
+                <label for="libelle" class="form-label">Désignation de l'Époque</label>
+                <input type="text" class="form-control" id="libelle" name="libelle" required>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-brown">
+                    <i class="fas fa-save"></i> Enregistrer
+                </button>
+                <a href="/type-epoque/show" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

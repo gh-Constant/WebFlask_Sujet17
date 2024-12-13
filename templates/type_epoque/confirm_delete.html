@@ -4,25 +4,94 @@
     <title>Confirmer la suppression</title>
 {% endblock %}
 
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .confirm-container {
+            background: #f4e4bc;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+        .alert-custom {
+            background-color: #fff3cd;
+            border: 2px solid #8b4513;
+            color: #8b4513;
+            border-radius: 10px;
+        }
+        .list-group-item {
+            background-color: #fff;
+            border: 1px solid #d4b894;
+            color: #8b4513;
+        }
+        .list-group-item:first-child {
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .list-group-item:last-child {
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        .btn-brown {
+            background-color: #8b4513;
+            color: #f4e4bc;
+            border: none;
+        }
+        .btn-brown:hover {
+            background-color: #6b3410;
+            color: #f4e4bc;
+        }
+        .page-header {
+            background: #f4e4bc;
+            padding: 2rem;
+            border-bottom: 2px solid #8b4513;
+            margin-bottom: 2rem;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
 <div class="container">
-    <h2>Confirmation de suppression</h2>
-    
-    <div class="alert alert-warning">
-        <h4>Attention!</h4>
-        <p>La suppression du type d'époque "{{ type_epoque.libelle }}" entrainera la suppression des tableaux suivants :</p>
+    <div class="page-header text-center">
+        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+            Confirmation de suppression
+        </h2>
     </div>
 
-    <ul class="list-group mb-4">
-    {% for tableau in related_tableaux %}
-        <li class="list-group-item">{{ tableau.nomTableau }} ({{ tableau.peintre }})</li>
-    {% endfor %}
-    </ul>
+    <div class="confirm-container">
+        <div class="alert alert-custom">
+            <h4 class="alert-heading">
+                <i class="fas fa-exclamation-triangle"></i> Attention!
+            </h4>
+            <p>La suppression du type d'époque "{{ type_epoque.libelle }}" entraînera la suppression des monuments suivants :</p>
+        </div>
 
-    <form method="post" action="/type-epoque/delete">
-        <input type="hidden" name="id" value="{{ type_epoque.id }}">
-        <button type="submit" class="btn btn-danger">Supprimer tout</button>
-        <a href="/type-epoque/show" class="btn btn-secondary">Annuler</a>
-    </form>
+        <ul class="list-group mb-4">
+            {% for tableau in related_tableaux %}
+                <li class="list-group-item">
+                    <i class="fas fa-landmark"></i> {{ tableau.nomTableau }} 
+                    <small class="text-muted">
+                        <i class="fas fa-user"></i> {{ tableau.peintre }}
+                    </small>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="text-center">
+            <form method="post" action="/type-epoque/delete" class="d-inline">
+                <input type="hidden" name="id" value="{{ type_epoque.id }}">
+                <button type="submit" class="btn btn-danger">
+                    <i class="fas fa-trash"></i> Supprimer tout
+                </button>
+                <a href="/type-epoque/show" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </form>
+        </div>
+    </div>
 </div>
 {% endblock %} 

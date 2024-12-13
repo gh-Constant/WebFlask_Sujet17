@@ -1,65 +1,152 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>Filtrer les tableaux</title>
+    <title>Filtrer les Monuments</title>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .page-header {
+            background: #f4e4bc;
+            padding: 2rem;
+            border-bottom: 2px solid #8b4513;
+            margin-bottom: 2rem;
+        }
+        .filter-form {
+            background: #f4e4bc;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+        .monument-card {
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+            background: #fff;
+        }
+        .monument-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(139, 69, 19, 0.2);
+        }
+        .monument-img {
+            height: 200px;
+            object-fit: cover;
+            border-bottom: 2px solid #8b4513;
+        }
+        .monument-info {
+            padding: 1.5rem;
+            background: #f4e4bc;
+        }
+        .epoch-badge {
+            background: #8b4513;
+            color: #f4e4bc;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+        .price-tag {
+            color: #8b4513;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h2>Filtrer les tableaux</h2>
-        
-        <form method="post" action="/tableau/filtre">
-            <!-- Filtre par nom -->
-            <div>
-                <label for="TableauNameFilter">Nom du tableau:</label><br>
-                <input type="text" id="TableauNameFilter" name="TableauNameFilter" placeholder="Rechercher un tableau">
-            </div>
-
-            <!-- Filtre par type d'époque -->
-            <div>
-                <h3>Type d'époque:</h3>
-                {% for type in typesEpoque %}
-                    <div>
-                        <input type="radio" name="typeEpoque_id" value="{{ type.id }}" id="type_{{ type.id }}">
-                        <label for="type_{{ type.id }}">{{ type.libelle }}</label>
-                    </div>
-                {% endfor %}
-            </div>
-
-            <!-- Filtre par prix -->
-            <div>
-                <h3>Prix:</h3>
-                <div>
-                    <label for="prixMin">Prix minimum:</label>
-                    <input type="number" id="prixMin" name="prixMin">
-                </div>
-                <div>
-                    <label for="prixMax">Prix maximum:</label>
-                    <input type="number" id="prixMax" name="prixMax">
-                </div>
-            </div>
-
-            <button type="submit">Filtrer</button>
-        </form>
-
-        <!-- Affichage des résultats -->
-        <div>
-            <h3>Résultats:</h3>
-            {% if tableaux %}
-                {% for tableau in tableaux %}
-                    <div>
-                        <h4>{{ tableau.nomTableau }}</h4>
-                        {% if tableau.photo %}
-                            <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" alt="{{ tableau.nomTableau }}" style="width: 200px">
-                        {% else %}
-                            <img src="{{ url_for('static', filename='photos/no_photo.jpeg') }}" alt="Pas de photo" style="width: 200px">
-                        {% endif %}
-                        <p>Prix: {{ tableau.prixAssurance }} €</p>
-                    </div>
-                {% endfor %}
-            {% else %}
-                <p>Aucun tableau trouvé</p>
-            {% endif %}
-        </div>
+<div class="container">
+    <div class="page-header text-center">
+        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+            Filtrer les Monuments
+        </h2>
     </div>
+
+    <!-- Formulaire de filtrage -->
+    <form method="post" action="/tableau/filtre" class="filter-form mb-4">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="TableauNameFilter" class="form-label">Nom du monument</label>
+                <input type="text" class="form-control" id="TableauNameFilter" name="TableauNameFilter" 
+                       placeholder="Rechercher un monument...">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Type d'époque</label>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for type in typesEpoque %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="typeEpoque_id" 
+                                   value="{{ type.id }}" id="type_{{ type.id }}">
+                            <label class="form-check-label" for="type_{{ type.id }}">
+                                {{ type.libelle }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="prixMin" class="form-label">Prix minimum (€)</label>
+                <input type="number" class="form-control" id="prixMin" name="prixMin">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="prixMax" class="form-label">Prix maximum (€)</label>
+                <input type="number" class="form-control" id="prixMax" name="prixMax">
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-brown">
+                <i class="fas fa-search"></i> Rechercher
+            </button>
+        </div>
+    </form>
+
+    <!-- Résultats -->
+    <div class="row g-4">
+        {% if tableaux %}
+            {% for tableau in tableaux %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="monument-card">
+                        {% if tableau.photo %}
+                            <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
+                                 alt="{{ tableau.nomTableau }}" 
+                                 class="monument-img w-100">
+                        {% else %}
+                            <div class="monument-img w-100 d-flex align-items-center justify-content-center bg-light">
+                                <i class="fas fa-image fa-3x text-muted"></i>
+                            </div>
+                        {% endif %}
+                        <div class="monument-info">
+                            <h4 class="h5 mb-3">{{ tableau.nomTableau }}</h4>
+                            <p class="mb-2">
+                                <i class="fas fa-user-alt"></i> {{ tableau.peintre or 'Artiste inconnu' }}
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-map-marker-alt"></i> {{ tableau.localisationMusee }}
+                            </p>
+                            <p class="mb-2">
+                                <i class="fas fa-calendar-alt"></i> {{ tableau.dateRealisation }}
+                            </p>
+                            {% if tableau.mouvement %}
+                                <span class="epoch-badge mb-3 d-inline-block">
+                                    {{ tableau.mouvement }}
+                                </span>
+                            {% endif %}
+                            <p class="price-tag mt-2 mb-0">
+                                {{ "{:,.2f}".format(tableau.prixAssurance) }} €
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="col-12 text-center">
+                <p class="text-muted">Aucun monument trouvé</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

@@ -1,23 +1,137 @@
-
-<nav lang="fr" class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">Sujet 17</a>
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
-  <div class="collapse navbar-collapse" id="navbarNavDropdown">
-    <ul class="navbar-nav">
-      <li class="nav-item active">
-        <a class="nav-link" href="/">Menu <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/tableau/show">Monuments</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="/type-epoque/show">Types d'epoques</a>
-      </li>
-        <li class="nav-item">
-        <a class="nav-link" href="/tableau/filtre">Filtrer</a>
-      </li>
-    </ul>
+<nav lang="fr" class="navbar navbar-expand-lg custom-navbar">
+  <div class="container">
+    <a class="navbar-brand vintage-brand" href="/">
+      <div class="brand-wrapper">
+        <i class="fas fa-landmark"></i>
+        <span>Patrimoine</span>
+        <span class="brand-historic">Historique</span>
+      </div>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item {{ 'active' if request.path == '/' }}">
+          <a class="nav-link" href="/"><i class="fas fa-home"></i> Accueil</a>
+        </li>
+        <li class="nav-item {{ 'active' if '/tableau/show' in request.path }}">
+          <a class="nav-link" href="/tableau/show"><i class="fas fa-monument"></i> Monuments</a>
+        </li>
+        <li class="nav-item {{ 'active' if '/type-epoque/show' in request.path }}">
+          <a class="nav-link" href="/type-epoque/show"><i class="fas fa-clock"></i> Époques</a>
+        </li>
+        <li class="nav-item {{ 'active' if '/tableau/filtre' in request.path }}">
+          <a class="nav-link" href="/tableau/filtre"><i class="fas fa-filter"></i> Filtrer</a>
+        </li>
+      </ul>
+    </div>
   </div>
 </nav>
+
+<style>
+.custom-navbar {
+  background: linear-gradient(to bottom, #f8e7c9 0%, #f4e4bc 100%);
+  border-bottom: 3px solid #8b4513;
+  box-shadow: 0 2px 15px rgba(139, 69, 19, 0.1);
+  font-family: 'Playfair Display', serif;
+  padding: 0.8rem 0;
+  position: relative;
+  margin-bottom: 2rem;
+}
+
+.custom-navbar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(to right, transparent, #8b4513, transparent);
+}
+
+.brand-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.vintage-brand {
+  font-size: 1.8rem;
+  color: #6b3410 !important;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.vintage-brand:hover {
+  transform: scale(1.02);
+}
+
+.brand-historic {
+  color: #8b4513;
+  font-style: italic;
+  margin-left: 5px;
+}
+
+.navbar-nav {
+  margin-right: 20px;
+}
+
+.navbar-nav .nav-link {
+  color: #5c3317 !important;
+  margin: 0 15px;
+  font-size: 1.2rem;
+  transition: all 0.3s ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.navbar-nav .nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #8b4513;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navbar-nav .nav-link:hover::after {
+  width: 100%;
+}
+
+.navbar-nav .nav-link:hover {
+  color: #8b4513 !important;
+  transform: translateY(-2px);
+}
+
+.nav-item.active .nav-link {
+  font-weight: bold;
+  color: #8b4513 !important;
+}
+
+.nav-item.active .nav-link::after {
+  width: 100%;
+}
+
+.navbar-nav .nav-link i {
+  margin-right: 8px;
+  font-size: 1.1rem;
+  opacity: 0.8;
+}
+
+@media (max-width: 991px) {
+  .navbar-nav .nav-link {
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(139, 69, 19, 0.1);
+  }
+  
+  .navbar-nav .nav-link::after {
+    display: none;
+  }
+}
+</style>

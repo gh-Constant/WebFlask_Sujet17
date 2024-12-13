@@ -22,7 +22,12 @@ def get_db():
 
 @app.route('/')
 def show_accueil():
-    return render_template('layout.html')
+    mycursor = get_db().cursor()
+    mycursor.execute("SELECT * FROM type_epoque")
+    typesEpoque = mycursor.fetchall()
+    mycursor.execute("SELECT * FROM tableaux ORDER BY RAND() LIMIT 3")
+    featured_monuments = mycursor.fetchall()
+    return render_template('accueil.html', typesEpoque=typesEpoque, featured_monuments=featured_monuments)
 
 if __name__ == '__main__':
     app.run()

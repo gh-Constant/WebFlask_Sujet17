@@ -1,41 +1,105 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    <title>modifier un monument</title>
+    <title>Modifier un Monument</title>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        .form-container {
+            background: #f4e4bc;
+            border: 2px solid #8b4513;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+        }
+        .form-label {
+            color: #8b4513;
+            font-weight: 500;
+        }
+        .form-control {
+            border: 1px solid #8b4513;
+            padding: 0.5rem;
+        }
+        .form-control:focus {
+            border-color: #6b3410;
+            box-shadow: 0 0 0 0.2rem rgba(139, 69, 19, 0.25);
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-  <h2>modifier un monument</h2>
+<div class="container">
+    <div class="page-header text-center">
+        <h2 class="display-4" style="color: #8b4513; font-family: 'Playfair Display', serif;">
+            Modifier un Monument
+        </h2>
+    </div>
 
-  <form method="post" action="/tableau/edit">
-    <fieldset>
-        <legend> Modifier un article</legend>
-        <input type="hidden" name="id" size="18" value="{{ tableau.id }}" id="id">
-        <label for="nomTableau">nomTableau</label><br>
-        <input type="text" name="nomTableau" size="18" value="{{ tableau.nomTableau }}" id="nomTableau"><br>
-        <label for="prixAssurance">prixAssurance</label><br>
-        <input type="text" name="prixAssurance" size="18" value="{{ tableau.prixAssurance }}" id="prixAssurance"><br>
-        <label for="dateRealisation">dateRealisation</label><br>
-        <input type="text" name="dateRealisation" size="18" value="{{ tableau.dateRealisation }}" id="dateRealisation"><br>
-        <label for="peintre">peintre</label><br>
-        <input type="text" name="peintre" size="18" value="{{ tableau.peintre }}" id="peintre"><br>
-        <label for="localisationMusee">localisationMusee</label><br>
-        <input type="text" name="localisationMusee" size="18" value="{{ tableau.localisationMusee }}" id="localisationMusee"><br>
-        <label for="photo">photo</label><br>
-        <input type="text" name="photo" size="18" value="{{ tableau.photo }}" id="photo"><br>
-        <label for="mouvement">mouvement</label><br>
-        <input type="text" name="mouvement" size="18" value="{{ tableau.mouvement }}" id="mouvement"><br>
-
-        <label for="typeEpoque_id">typeEpoque_id</label><br>
-        <select name="typeEpoque_id" required> <br>
-            {% for type in typesEpoque %}
-                <option value="{{ type.id }}"
-                    {% if tableau.typesEpoque_id is defined and type.id ==  tableau.typesEpoque_id %}selected{% endif %}> {{ type.libelle }}
-                </option>
-            {% endfor %}
-        </select><br>
-
-        <input type="submit" value="Modifier" name="Modifier" >
-    </fieldset>
-  </form>
+    <div class="form-container">
+        <form method="post" action="/tableau/edit">
+            <input type="hidden" name="id" value="{{ tableau.id }}">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label for="nomTableau" class="form-label">Nom du Monument</label>
+                    <input type="text" class="form-control" id="nomTableau" name="nomTableau" 
+                           value="{{ tableau.nomTableau }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="prixAssurance" class="form-label">Prix d'Assurance (€)</label>
+                    <input type="number" class="form-control" id="prixAssurance" name="prixAssurance" 
+                           value="{{ tableau.prixAssurance }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="dateRealisation" class="form-label">Date de Réalisation</label>
+                    <input type="date" class="form-control" id="dateRealisation" name="dateRealisation" 
+                           value="{{ tableau.dateRealisation }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="peintre" class="form-label">Artiste</label>
+                    <input type="text" class="form-control" id="peintre" name="peintre" 
+                           value="{{ tableau.peintre }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="localisationMusee" class="form-label">Localisation</label>
+                    <input type="text" class="form-control" id="localisationMusee" name="localisationMusee" 
+                           value="{{ tableau.localisationMusee }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="photo" class="form-label">Photo</label>
+                    <input type="text" class="form-control" id="photo" name="photo" 
+                           value="{{ tableau.photo }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="mouvement" class="form-label">Mouvement Artistique</label>
+                    <input type="text" class="form-control" id="mouvement" name="mouvement" 
+                           value="{{ tableau.mouvement }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="typeEpoque_id" class="form-label">Époque</label>
+                    <select class="form-select" id="typeEpoque_id" name="typeEpoque_id" required>
+                        <option value="">Choisir une époque...</option>
+                        {% for type in typesEpoque %}
+                            <option value="{{ type.id }}"
+                                {% if tableau.typesEpoque_id is defined and type.id ==  tableau.typesEpoque_id %}selected{% endif %}> {{ type.libelle }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-brown">
+                    <i class="fas fa-save"></i> Enregistrer les modifications
+                </button>
+                <a href="/tableau/show" class="btn btn-outline-secondary">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
