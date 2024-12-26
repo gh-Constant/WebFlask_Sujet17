@@ -1,17 +1,13 @@
-
 CREATE DATABASE IF NOT EXISTS monuments_db;
 USE monuments_db;
 
-
 DROP TABLE IF EXISTS tableaux;
 DROP TABLE IF EXISTS type_epoque;
-
 
 CREATE TABLE type_epoque (
     id INT PRIMARY KEY AUTO_INCREMENT,
     libelle VARCHAR(50) NOT NULL
 );
-
 
 CREATE TABLE tableaux (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -25,7 +21,6 @@ CREATE TABLE tableaux (
     typeEpoque_id INT,
     CONSTRAINT constraint_type_epoque FOREIGN KEY (typeEpoque_id) REFERENCES type_epoque(id)
 );
-
 
 INSERT INTO type_epoque (id, libelle) VALUES 
 (1, 'Renaissance'),
@@ -60,7 +55,6 @@ GROUP BY type_epoque.id, type_epoque.libelle
 ORDER BY type_epoque.libelle;
 
 PREPARE tableau_prepare FROM 'INSERT INTO tableaux (nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
-
 
 SET @nom = 'Les Nymphéas';
 SET @prix = 2500.00;
