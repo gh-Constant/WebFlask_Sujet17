@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
@@ -76,12 +76,15 @@
                                 <td>{{ tableau.localisationMusee }}</td>
                                 <td>
                                     {% if tableau.photo %}
-                                        <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
+                                        <img src="/static/photos/{{ tableau.photo }}" 
                                              alt="{{ tableau.nomTableau }}" 
                                              style="width: 50px; height: 50px; object-fit: cover;"
                                              class="img-thumbnail">
                                     {% else %}
-                                        <i class="fas fa-image text-muted"></i>
+                                        <img src="/static/photos/no_photo.jpeg" 
+                                             alt="{{ tableau.nomTableau }}" 
+                                             style="width: 50px; height: 50px; object-fit: cover;"
+                                             class="img-thumbnail">
                                     {% endif %}
                                 </td>
                                 <td>{{ tableau.mouvement or 'pas de mouvement'}}</td>

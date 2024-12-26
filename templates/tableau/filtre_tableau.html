@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
@@ -112,13 +112,13 @@
                     <div class="col-md-6 col-lg-4">
                         <div class="monument-card">
                             {% if tableau.photo %}
-                                <img src="{{ url_for('static', filename='photos/' + tableau.photo) }}" 
+                                <img src="/static/photos/{{ tableau.photo }}" 
                                      alt="{{ tableau.nomTableau }}" 
                                      class="monument-img w-100">
                             {% else %}
-                                <div class="monument-img w-100 d-flex align-items-center justify-content-center bg-light">
-                                    <i class="fas fa-image fa-3x text-muted"></i>
-                                </div>
+                                <img src="/static/photos/no_photo.jpeg" 
+                                     alt="{{ tableau.nomTableau }}" 
+                                     class="monument-img w-100">
                             {% endif %}
                             <div class="monument-info">
                                 <h4 class="h5 mb-3">{{ tableau.nomTableau }}</h4>

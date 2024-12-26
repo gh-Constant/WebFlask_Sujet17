@@ -5,13 +5,13 @@
 {% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
         .hero-section {
             background: linear-gradient(rgba(89, 55, 37, 0.7), rgba(89, 55, 37, 0.7)), 
-                        url('{{ url_for('static', filename='images/versailles.jpg') }}');
+                        url('images/versailles.jpg');
             background-size: cover;
             background-position: center;
             height: 70vh;
@@ -121,7 +121,7 @@
         <div class="container">
             <h1 class="display-4 mb-4">Découvrez le Patrimoine Artistique Français</h1>
             <p class="lead mb-4">Une collection exceptionnelle de chefs-d'œuvre à travers les âges</p>
-            <a href="{{ url_for('show_tableau') }}" class="btn btn-lg btn-outline-light">Explorer la Collection</a>
+            <a href="tableau/show_tableau" class="btn btn-lg btn-outline-light">Explorer la Collection</a>
         </div>
     </section>
 
@@ -132,24 +132,24 @@
 
     <div class="container">
         <div class="painting-grid">
-            {% for monument in featured_monuments %}
+            {% for tableau in featured_tableaux %}
             <div class="painting-card">
-                {% if monument.photo %}
-                    <img src="{{ url_for('static', filename='photos/' + monument.photo) }}" 
-                         alt="{{ monument.nomTableau }}" 
+                {% if tableau.photo %}
+                    <img src="/static/photos/{{ tableau.photo }}" 
+                         alt="{{ tableau.nomTableau }}" 
                          class="painting-image">
                 {% else %}
-                    <div class="painting-placeholder">
-                        <i class="fas fa-palette"></i>
-                    </div>
+                    <img src="/static/photos/no_photo.jpeg" 
+                         alt="{{ tableau.nomTableau }}" 
+                         class="painting-image">
                 {% endif %}
                 <div class="painting-info">
-                    <h3 class="painting-title">{{ monument.nomTableau }}</h3>
+                        <h3 class="painting-title">{{ tableau.nomTableau }}</h3>
                     <div class="painting-details">
-                        <p><i class="fas fa-user-alt"></i> {{ monument.peintre }}</p>
-                        <p><i class="fas fa-map-marker-alt"></i> {{ monument.localisationMusee }}</p>
-                        {% if monument.mouvement %}
-                            <span class="epoch-badge">{{ monument.mouvement }}</span>
+                        <p><i class="fas fa-user-alt"></i> {{ tableau.peintre }}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> {{ tableau.localisationMusee }}</p>
+                        {% if tableau.mouvement %}
+                            <span class="epoch-badge">{{ tableau.mouvement }}</span>
                         {% endif %}
                     </div>
                 </div>

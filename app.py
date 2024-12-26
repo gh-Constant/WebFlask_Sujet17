@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, abort, flash, g
+from flask import Flask, request, render_template, redirect, flash, g
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -26,8 +26,8 @@ def show_accueil():
     mycursor.execute("SELECT * FROM type_epoque")
     typesEpoque = mycursor.fetchall()
     mycursor.execute("SELECT * FROM tableaux ORDER BY RAND() LIMIT 3")
-    featured_monuments = mycursor.fetchall()
-    return render_template('accueil.html', typesEpoque=typesEpoque, featured_monuments=featured_monuments)
+    featured_tableaux = mycursor.fetchall()
+    return render_template('accueil.html', typesEpoque=typesEpoque, featured_tableaux=featured_tableaux)
 
 if __name__ == '__main__':
     app.run()
@@ -35,7 +35,13 @@ if __name__ == '__main__':
 @app.route('/type-epoque/show')
 def show_type_epoque():
     mycursor = get_db().cursor()
-    mycursor.execute("SELECT * FROM type_epoque")
+    sql = """
+        SELECT type_epoque.*, COUNT(tableaux.id) as nombre_monuments 
+        FROM type_epoque
+        LEFT JOIN tableaux ON type_epoque.id = tableaux.typeEpoque_id 
+        GROUP BY type_epoque.id, type_epoque.libelle
+    """
+    mycursor.execute(sql)
     typesEpoque = mycursor.fetchall()
     return render_template('type_epoque/show_type_epoque.html', typesEpoque=typesEpoque)
 
@@ -50,7 +56,7 @@ def valid_add_type_epoque():
     sql = "INSERT INTO type_epoque (libelle) VALUES (%s)"
     mycursor.execute(sql, (libelle,))
     get_db().commit()
-    message = u'type ajouté , libellé :'+libelle
+    message = f"Type d'époque ajouté - Libellé: {libelle}"
     flash(message, 'alert-success')
     return redirect('/type-epoque/show')
 
@@ -59,25 +65,21 @@ def delete_type_epoque():
     id = request.args.get('id', '')
     mycursor = get_db().cursor()
     
-    # Get all tableaux using this type_epoque
     sql = "SELECT * FROM tableaux WHERE typeEpoque_id = %s"
     mycursor.execute(sql, (id,))
     related_tableaux = mycursor.fetchall()
     
-    # Get the type_epoque details
     sql = "SELECT * FROM type_epoque WHERE id = %s"
     mycursor.execute(sql, (id,))
     type_epoque = mycursor.fetchone()
     
     if not related_tableaux:
-        # If no related tableaux, delete directly
         sql = "DELETE FROM type_epoque WHERE id = %s"
         mycursor.execute(sql, (id,))
         get_db().commit()
-        flash(u'Type époque supprimé, id: ' + str(id), 'alert-warning')
+        flash(u'Type époque supprimé, id: ' + str(id) + ' libellé: ' + type_epoque['libelle'], 'alert-warning')
         return redirect('/type-epoque/show')
     
-    # If there are related tableaux, show confirmation page
     return render_template('type_epoque/confirm_delete.html', 
                          type_epoque=type_epoque, 
                          related_tableaux=related_tableaux)
@@ -87,16 +89,19 @@ def delete_type_epoque_confirm():
     id = request.form.get('id')
     mycursor = get_db().cursor()
     
-    # Delete related tableaux first
+    sql = "SELECT * FROM type_epoque WHERE id = %s"
+    mycursor.execute(sql, (id,))
+    type_epoque = mycursor.fetchone()
+    
     sql = "DELETE FROM tableaux WHERE typeEpoque_id = %s"
     mycursor.execute(sql, (id,))
-    
-    # Then delete the type_epoque
+
     sql = "DELETE FROM type_epoque WHERE id = %s"
     mycursor.execute(sql, (id,))
     get_db().commit()
     
-    flash(u'Type époque et tableaux associés supprimés', 'alert-warning')
+    message = f"Type d'époque supprimé - ID: {id}, Libellé: {type_epoque['libelle']}"
+    flash(message, 'alert-warning')
     return redirect('/type-epoque/show')
 
 @app.route('/type-epoque/edit', methods=['GET'])
@@ -107,17 +112,18 @@ def edit_type_epoque():
     mycursor.execute("SELECT * FROM type_epoque")
     type_epoque = mycursor.fetchall()
     type_epoque = type_epoque[id-1] 
+
     return render_template('type_epoque/edit_type_epoque.html', type_epoque=type_epoque)
 
 @app.route('/type-epoque/edit', methods=['POST'])
 def valid_edit_type_epoque():
-    libelle = request.form['libelle']
+    libelle = request.form.get('libelle', '')
     id = request.form.get('id', '')
     mycursor = get_db().cursor()
     sql = "UPDATE type_epoque SET libelle = %s WHERE id = %s"
     mycursor.execute(sql, (libelle, id))
     get_db().commit()
-    message=u'type tableau modifié, id: ' + id + " libelle : " + libelle
+    message = f"Type d'époque modifié - ID: {id}, Nouveau libellé: {libelle}"
     flash(message, 'alert-success')
     return redirect('/type-epoque/show')
 
@@ -151,12 +157,17 @@ def valid_add_tableau():
     mouvement = request.form.get('mouvement', '')
 
     mycursor = get_db().cursor()
-    sql = "INSERT INTO tableaux (nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
-    mycursor.execute(sql, (nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id))
+    sql = """INSERT INTO tableaux (nomTableau, prixAssurance, dateRealisation, 
+             peintre, localisationMusee, photo, mouvement, typeEpoque_id) 
+             VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"""
+    mycursor.execute(sql, (nomTableau, prixAssurance, dateRealisation, 
+                         peintre, localisationMusee, photo, mouvement, typeEpoque_id))
     get_db().commit()
 
-    message = u'tableau ajouté , nom:'+nomTableau + '---- type_epoque_id :' + typeEpoque_id + ' ---- prixAssurance:' + prixAssurance + ' - dateRealisation:'+  dateRealisation + ' - peintre:' + peintre + ' - localisationMusee:' + localisationMusee + ' - photo:' + photo + ' - mouvement:' + mouvement
-    print(message)
+    message = (f"Tableau ajouté - Nom: {nomTableau}, Prix assurance: {prixAssurance}€, "
+              f"Date réalisation: {dateRealisation}, Peintre: {peintre}, "
+              f"Localisation: {localisationMusee}, Photo: {photo}, "
+              f"Mouvement: {mouvement}, Type époque ID: {typeEpoque_id}")
     flash(message, 'alert-success')
     return redirect('/tableau/show')
 
@@ -164,10 +175,19 @@ def valid_add_tableau():
 def delete_tableau():
     id = request.args.get('id', '')
     mycursor = get_db().cursor()
-    sql = "DELETE FROM tableaux WHERE id = " + str(id)
-    mycursor.execute(sql)
+
+    sql = "SELECT * FROM tableaux WHERE id = %s"
+    mycursor.execute(sql, (id,))
+    tableau = mycursor.fetchone()
+    
+    sql = "DELETE FROM tableaux WHERE id = %s"
+    mycursor.execute(sql, (id,))
     get_db().commit()
-    message=u'un tableau supprimé, id : ' + id
+    
+    message = (f"Tableau supprimé - ID: {id}, Nom: {tableau['nomTableau']}, "
+              f"Prix assurance: {tableau['prixAssurance']}€, "
+              f"Date réalisation: {tableau['dateRealisation']}, "
+              f"Peintre: {tableau['peintre']}")
     flash(message, 'alert-warning')
     return redirect('/tableau/show')
 
@@ -189,6 +209,7 @@ def edit_tableau():
 
 @app.route('/tableau/edit', methods=['POST'])
 def valid_edit_tableau():
+    id = request.form.get('id', '')
     nomTableau = request.form.get('nomTableau', '')
     prixAssurance = request.form.get('prixAssurance', '')
     dateRealisation = request.form.get('dateRealisation', '')
@@ -197,20 +218,22 @@ def valid_edit_tableau():
     photo = request.form.get('photo', '')
     mouvement = request.form.get('mouvement', '')
     typeEpoque_id = request.form.get('typeEpoque_id', '')
-    id = request.form.get('id', '')
 
     mycursor = get_db().cursor()
-    sql = """UPDATE tableaux SET nomTableau = %s, prixAssurance = %s, dateRealisation = %s,
-                 peintre = %s, localisationMusee = %s, photo = %s,
-                 mouvement = %s, typeEpoque_id = %s 
+    sql = """UPDATE tableaux SET nomTableau = %s, prixAssurance = %s, 
+             dateRealisation = %s, peintre = %s, localisationMusee = %s, 
+             photo = %s, mouvement = %s, typeEpoque_id = %s 
              WHERE id = %s"""
-    
     mycursor.execute(sql, (nomTableau, prixAssurance, dateRealisation, 
-                          peintre, localisationMusee, photo,
-                          mouvement, typeEpoque_id, id))
+                          peintre, localisationMusee, photo, mouvement, 
+                          typeEpoque_id, id))
     get_db().commit()
     
-    message = u'tableau modifié, id: ' + id
+    message = (f"Tableau modifié - ID: {id}, Nom: {nomTableau}, "
+              f"Prix assurance: {prixAssurance}€, Date réalisation: {dateRealisation}, "
+              f"Peintre: {peintre}, Localisation: {localisationMusee}, "
+              f"Photo: {photo}, Mouvement: {mouvement}, "
+              f"Type époque ID: {typeEpoque_id}")
     flash(message, 'alert-success')
     return redirect('/tableau/show')
 
@@ -263,7 +286,7 @@ def valid_filtre_tableau():
 def etat_tableau():
     mycursor = get_db().cursor()
     
-    # Get period types with their painting counts
+
     mycursor.execute("""
         SELECT type_epoque.libelle as period_name, COUNT(tableaux.id) as painting_count
         FROM type_epoque
@@ -272,16 +295,15 @@ def etat_tableau():
         ORDER BY type_epoque.libelle
     """)
     period_stats = mycursor.fetchall()
-    
-    # Get total number of paintings
+
     mycursor.execute("SELECT COUNT(*) as total FROM tableaux")
     total_paintings = mycursor.fetchone()['total']
     
-    # Get total insurance value
+
     mycursor.execute("SELECT SUM(prixAssurance) as total_insurance FROM tableaux")
     total_insurance = mycursor.fetchone()['total_insurance'] or 0
     
-    # Prepare chart data
+
     chart_names = [stat['period_name'] for stat in period_stats]
     chart_amounts = [float(stat['painting_count']) for stat in period_stats]
     
@@ -293,3 +315,21 @@ def etat_tableau():
         chart_names=chart_names,
         chart_amounts=chart_amounts
     )
+
+@app.route('/type-epoque/delete-tableau', methods=['GET'])
+def delete_single_tableau():
+    type_id = request.args.get('type_id', '')
+    tableau_id = request.args.get('tableau_id', '')
+    mycursor = get_db().cursor()
+    
+    sql = "SELECT * FROM tableaux WHERE id = %s"
+    mycursor.execute(sql, (tableau_id,))
+    tableau = mycursor.fetchone()
+    
+    if tableau:
+        sql = "DELETE FROM tableaux WHERE id = %s"
+        mycursor.execute(sql, (tableau_id,))
+        get_db().commit()
+        flash(f'Tableau supprimé: {tableau["nomTableau"]}', 'alert-warning')
+    
+    return redirect(f'/type-epoque/delete?id={type_id}')

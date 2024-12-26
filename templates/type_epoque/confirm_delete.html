@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
@@ -73,11 +73,18 @@
 
             <ul class="list-group mb-4">
                 {% for tableau in related_tableaux %}
-                    <li class="list-group-item">
-                        <i class="fas fa-landmark"></i> {{ tableau.nomTableau }} 
-                        <small class="text-muted">
-                            <i class="fas fa-user"></i> {{ tableau.peintre }}
-                        </small>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-landmark"></i> {{ tableau.nomTableau }} 
+                            <small class="text-muted">
+                                <i class="fas fa-user"></i> {{ tableau.peintre }}
+                            </small>
+                        </div>
+                        <a href="/type-epoque/delete-tableau?type_id={{ type_epoque.id }}&tableau_id={{ tableau.id }}" 
+                           class="btn btn-sm btn-outline-danger"
+                           onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce monument ?')">
+                            <i class="fas fa-trash"></i> Supprimer
+                        </a>
                     </li>
                 {% endfor %}
             </ul>

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="col-md-6">
                         <label for="typeEpoque_id" class="form-label">Époque</label>
-                        <select class="form-select" id="typeEpoque_id" name="typeEpoque_id" required>
+                        <select class="form-select bg-warning" id="typeEpoque_id" name="typeEpoque_id" required>
                             <option value="">Choisir une époque...</option>
                             {% for type in typesEpoque %}
                                 <option value="{{ type.id }}">{{ type.libelle }}</option>

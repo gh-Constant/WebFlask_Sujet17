@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block stylesheets %}
-<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/css/bootstrap.css') }}">
+<link rel="stylesheet" href="bootstrap/css/bootstrap.css">
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
@@ -54,6 +54,7 @@
                     <tr>
                         <th>ID</th>
                         <th>Désignation</th>
+                        <th>Nombre de Monuments</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -63,6 +64,7 @@
                             <tr>
                                 <td>{{ ligne.id }}</td>
                                 <td>{{ ligne.libelle }}</td>
+                                <td><span style="color: #8b4513;">{{ ligne.nombre_monuments }}</span></td>
                                 <td>
                                     <div class="btn-group">
                                         <a href="/type-epoque/edit?id={{ ligne.id }}" class="btn btn-sm btn-outline-secondary">

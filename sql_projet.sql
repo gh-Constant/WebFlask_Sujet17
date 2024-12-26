@@ -1,16 +1,18 @@
--- Create database
-DROP DATABASE IF EXISTS monuments_db;
 
 CREATE DATABASE IF NOT EXISTS monuments_db;
 USE monuments_db;
 
--- Create type_epoque table
+
+DROP TABLE IF EXISTS tableaux;
+DROP TABLE IF EXISTS type_epoque;
+
+
 CREATE TABLE type_epoque (
     id INT PRIMARY KEY AUTO_INCREMENT,
     libelle VARCHAR(50) NOT NULL
 );
 
--- Create tableau table
+
 CREATE TABLE tableaux (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nomTableau VARCHAR(100) NOT NULL,
@@ -21,17 +23,17 @@ CREATE TABLE tableaux (
     photo VARCHAR(100),
     mouvement VARCHAR(50),
     typeEpoque_id INT,
-    FOREIGN KEY (typeEpoque_id) REFERENCES type_epoque(id)
+    CONSTRAINT constraint_type_epoque FOREIGN KEY (typeEpoque_id) REFERENCES type_epoque(id)
 );
 
--- Insert type_epoque data
+
 INSERT INTO type_epoque (id, libelle) VALUES 
 (1, 'Renaissance'),
 (2, 'Temps Modernes'),
 (3, 'Contemporain'),
 (4, 'Moyen-Age');
 
--- Insert tableau data
+
 INSERT INTO tableaux (id, nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES 
 (1, 'La Joconde', 4000, '1506-10-21', 'Léonard de Vinci', 'Louvre', 'laJoconde.jpeg', NULL, 1),
 (2, 'Le Radeau de La Méduse', 300.2, '1819-03-15', 'Théodore Géricault', 'Louvre', 'leRadeauDeLaMeduse.jpeg', 'romantisme', 3),
@@ -43,3 +45,35 @@ INSERT INTO tableaux (id, nomTableau, prixAssurance, dateRealisation, peintre, l
 (9, 'Portrait du bouffon Gonella', 1230, '1445-03-18', 'Jean Fouquet', 'Kunsthistorisches Museum', 'leProtraitduBouffonGonella.jpeg', NULL, 4),
 (10, 'La liberté guidant le peuple', 150.5, '1830-12-25', 'Eugène DelaCroix', 'Louvre', 'laLiberteGuidantlePeuple.jpeg', 'romantisme', 3),
 (11, "Rentable de l'Agneau mystique", 1010, '1432-01-05', 'Jan van Eyck', 'Cathédrale Saint-Bavon de Gand', 'AgneauMystique.jpeg', NULL, 4);
+
+ALTER TABLE tableaux DROP CONSTRAINT constraint_type_epoque;
+
+ALTER TABLE tableaux ADD CONSTRAINT constraint_type_epoque FOREIGN KEY (typeEpoque_id) REFERENCES type_epoque(id);
+
+SELECT 
+    type_epoque.libelle AS Epoque,
+    COUNT(tableaux.id) AS Nombre_Tableaux,
+    ROUND(AVG(tableaux.prixAssurance), 2) AS Prix_Moyen_Assurance
+FROM type_epoque
+LEFT JOIN tableaux ON type_epoque.id = tableaux.typeEpoque_id
+GROUP BY type_epoque.id, type_epoque.libelle
+ORDER BY type_epoque.libelle;
+
+PREPARE tableau_prepare FROM 'INSERT INTO tableaux (nomTableau, prixAssurance, dateRealisation, peintre, localisationMusee, photo, mouvement, typeEpoque_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)';
+
+
+SET @nom = 'Les Nymphéas';
+SET @prix = 2500.00;
+SET @date = '1920-01-01';
+SET @peintre = 'Claude Monet';
+SET @musee = 'Musée de l\'Orangerie';
+SET @photo = 'nympheas.jpeg';
+SET @mouvement = 'impressionnisme';
+SET @type_id = 3;
+
+EXECUTE tableau_prepare USING @nom, @prix, @date, @peintre, @musee, @photo, @mouvement, @type_id;
+
+DEALLOCATE PREPARE tableau_prepare;
+
+SELECT * FROM tableaux
+
