@@ -121,7 +121,7 @@
         <div class="container">
             <h1 class="display-4 mb-4">Découvrez le Patrimoine Artistique Français</h1>
             <p class="lead mb-4">Une collection exceptionnelle de chefs-d'œuvre à travers les âges</p>
-            <a href="tableau/show_tableau" class="btn btn-lg btn-outline-light">Explorer la Collection</a>
+            <a href="tableau/show" class="btn btn-lg btn-outline-light">Explorer la Collection</a>
         </div>
     </section>
 
@@ -135,7 +135,7 @@
             {% for tableau in featured_tableaux %}
             <div class="painting-card">
                 {% if tableau.photo %}
-                    <img src="/static/photos/{{ tableau.photo }}" 
+                    <img src="photos/{{ tableau.photo }}" 
                          alt="{{ tableau.nomTableau }}" 
                          class="painting-image">
                 {% else %}
