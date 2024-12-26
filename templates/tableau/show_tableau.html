@@ -60,7 +60,7 @@
                         <th>Localisation</th>
                         <th>Photo</th>
                         <th>Mouvement</th>
-                        <th>Époque</th>
+                        <th>Époque<span style="color: #cc0000;">(lié à la table typeEpoque)</span></th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -70,7 +70,7 @@
                             <tr>
                                 <td>{{ tableau.id }}</td>
                                 <td>{{ tableau.nomTableau }}</td>
-                                <td>{{ "{:,.2f}".format(tableau.prixAssurance) }}</td>
+                                <td>{{ tableau.prixAssurance }}</td>
                                 <td>{{ tableau.dateRealisation }}</td>
                                 <td>{{ tableau.peintre }}</td>
                                 <td>{{ tableau.localisationMusee }}</td>
@@ -84,11 +84,11 @@
                                         <i class="fas fa-image text-muted"></i>
                                     {% endif %}
                                 </td>
-                                <td>{{ tableau.mouvement or '-' }}</td>
+                                <td>{{ tableau.mouvement or 'pas de mouvement'}}</td>
                                 <td>
                                     {% for type in typesEpoque %}
                                         {% if type.id == tableau.typeEpoque_id %}
-                                            {{ type.libelle }}
+                                            ({{ tableau.typeEpoque_id }}) <span style="color: #cc0000;">{{ type.libelle }}</span>
                                         {% endif %}
                                     {% endfor %}
                                 </td>
